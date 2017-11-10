@@ -1,0 +1,39 @@
+{% import (
+    "github.com/tiehuis/gorum/model"
+) %}
+
+{% code
+type ThreadPage struct {
+    Board model.Board
+    Posts []model.Post
+}
+%}
+
+{% func (tp *ThreadPage) Body() %}
+<pre>
+    <span><a href="/">Home</a></span>
+    <h3><a href="/board/{%s tp.Board.Code %}">/{%s tp.Board.Code %}/ - {%s tp.Board.Name %}</a></h3>
+
+    <div><label for="show-new-post">+[New Post]</label></div>
+    <input id="show-new-post" type=checkbox>
+    <div id="new-post" class="hidden">
+        <form action="/board/{%s tp.Board.Code %}/{%v tp.Posts[0].Id %}" method="post">
+            <textarea required name="content" spellcheck="true" rows="2" maxlength="2000" placeholder="New Post"></textarea>
+            <input type="submit" value="send">
+        </form>
+    </div>
+
+    <table>
+    <tr>
+        <th>post</th>
+        <th>content</th>
+    </tr>
+    {% for _, p := range tp.Posts %}
+        <tr>
+            <td>{%v p.Id %}</td>
+            <td>{%s p.Content %}</td>
+        </tr>
+    {% endfor %}
+    </table>
+</pre>
+{% endfunc %}

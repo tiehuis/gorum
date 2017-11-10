@@ -1,0 +1,23 @@
+{% code
+type InternalErrorPage struct {
+    Backtrace interface{}
+}
+%}
+
+{% func (ep *InternalErrorPage) Body() %}
+<pre>
+    internal error occurred!
+
+    {%v ep.Backtrace %}
+</pre>
+{% endfunc %}
+
+{% code
+type NotFoundPage struct {}
+%}
+
+{% func (ep *NotFoundPage) Body() %}
+<pre>
+    404 error!
+</pre>
+{% endfunc %}

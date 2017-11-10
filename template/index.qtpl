@@ -1,0 +1,22 @@
+{% import (
+    "github.com/tiehuis/gorum/model"
+) %}
+
+{% code
+type IndexPage struct {
+    Boards []model.Board
+}
+%}
+
+{% func (ip *IndexPage) Body() %}
+<pre>
+    <h2>boards</h2>
+    <table>
+    {% for _, b := range ip.Boards %}
+        <tr>
+            <td><a href="/board/{%u b.Code %}">{%s b.Name %}</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+</pre>
+{% endfunc %}

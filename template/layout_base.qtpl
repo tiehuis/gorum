@@ -1,0 +1,19 @@
+{% interface
+Page {
+    Body()
+}
+%}
+
+{% func PageTemplate(p Page) %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>gorum</title>
+        <link rel="stylesheet" href="/static/gorum.css" />
+    </head>
+    <body>
+        {%= p.Body() %}
+    </body>
+</html>
+{% endfunc %}

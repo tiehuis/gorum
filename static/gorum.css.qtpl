@@ -1,0 +1,18 @@
+{% func StyleSheet() %}
+body {
+    margin: 25px 100px 25px 100px
+}
+
+.hidden {
+    display: none
+}
+
+/* toggles an arbitrary div using an arbitrary label, see board.qtpl for usage */
+input[type=checkbox] {
+    display: none;
+}
+input[type=checkbox]:checked + div {
+    display: block !important;
+}
+
+{% endfunc %}
