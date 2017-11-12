@@ -21,12 +21,25 @@ var (
 func StreamStyleSheet(qw422016 *qt422016.Writer) {
 	//line static/gorum.css.qtpl:1
 	qw422016.N().S(`
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    margin: 25px 100px 25px 100px
+    margin: 25px 100px 25px 100px;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 9pt;
+}
+
+.post-table {
+    background-color: aliceblue;
+    border-top-style: ridge;
 }
 
 .hidden {
-    display: none
+    display: none;
 }
 
 /* toggles an arbitrary div using an arbitrary label, see board.qtpl for usage */
@@ -38,31 +51,31 @@ input[type=checkbox]:checked + div {
 }
 
 `)
-//line static/gorum.css.qtpl:18
+//line static/gorum.css.qtpl:31
 }
 
-//line static/gorum.css.qtpl:18
+//line static/gorum.css.qtpl:31
 func WriteStyleSheet(qq422016 qtio422016.Writer) {
-	//line static/gorum.css.qtpl:18
+	//line static/gorum.css.qtpl:31
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line static/gorum.css.qtpl:18
+	//line static/gorum.css.qtpl:31
 	StreamStyleSheet(qw422016)
-	//line static/gorum.css.qtpl:18
+	//line static/gorum.css.qtpl:31
 	qt422016.ReleaseWriter(qw422016)
-//line static/gorum.css.qtpl:18
+//line static/gorum.css.qtpl:31
 }
 
-//line static/gorum.css.qtpl:18
+//line static/gorum.css.qtpl:31
 func StyleSheet() string {
-	//line static/gorum.css.qtpl:18
+	//line static/gorum.css.qtpl:31
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line static/gorum.css.qtpl:18
+	//line static/gorum.css.qtpl:31
 	WriteStyleSheet(qb422016)
-	//line static/gorum.css.qtpl:18
+	//line static/gorum.css.qtpl:31
 	qs422016 := string(qb422016.B)
-	//line static/gorum.css.qtpl:18
+	//line static/gorum.css.qtpl:31
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line static/gorum.css.qtpl:18
+	//line static/gorum.css.qtpl:31
 	return qs422016
-//line static/gorum.css.qtpl:18
+//line static/gorum.css.qtpl:31
 }

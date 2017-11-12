@@ -31,58 +31,59 @@ type IndexPage struct {
 func (ip *IndexPage) StreamBody(qw422016 *qt422016.Writer) {
 	//line template/index.qtpl:11
 	qw422016.N().S(`
-<pre>
-    <h2>boards</h2>
-    <table>
+<table width="85%">
+<tbody>
+    <span>boards</span>
+
     `)
-	//line template/index.qtpl:15
+	//line template/index.qtpl:16
 	for _, b := range ip.Boards {
-		//line template/index.qtpl:15
+		//line template/index.qtpl:16
 		qw422016.N().S(`
         <tr>
             <td><a href="/board/`)
-		//line template/index.qtpl:17
+		//line template/index.qtpl:18
 		qw422016.N().U(b.Code)
-		//line template/index.qtpl:17
+		//line template/index.qtpl:18
 		qw422016.N().S(`">`)
-		//line template/index.qtpl:17
+		//line template/index.qtpl:18
 		qw422016.E().S(b.Name)
-		//line template/index.qtpl:17
+		//line template/index.qtpl:18
 		qw422016.N().S(`</a></td>
         </tr>
     `)
-		//line template/index.qtpl:19
+		//line template/index.qtpl:20
 	}
-	//line template/index.qtpl:19
+	//line template/index.qtpl:20
 	qw422016.N().S(`
-    </table>
-</pre>
+</tbody>
+</table>
 `)
-//line template/index.qtpl:22
+//line template/index.qtpl:23
 }
 
-//line template/index.qtpl:22
+//line template/index.qtpl:23
 func (ip *IndexPage) WriteBody(qq422016 qtio422016.Writer) {
-	//line template/index.qtpl:22
+	//line template/index.qtpl:23
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line template/index.qtpl:22
+	//line template/index.qtpl:23
 	ip.StreamBody(qw422016)
-	//line template/index.qtpl:22
+	//line template/index.qtpl:23
 	qt422016.ReleaseWriter(qw422016)
-//line template/index.qtpl:22
+//line template/index.qtpl:23
 }
 
-//line template/index.qtpl:22
+//line template/index.qtpl:23
 func (ip *IndexPage) Body() string {
-	//line template/index.qtpl:22
+	//line template/index.qtpl:23
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line template/index.qtpl:22
+	//line template/index.qtpl:23
 	ip.WriteBody(qb422016)
-	//line template/index.qtpl:22
+	//line template/index.qtpl:23
 	qs422016 := string(qb422016.B)
-	//line template/index.qtpl:22
+	//line template/index.qtpl:23
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line template/index.qtpl:22
+	//line template/index.qtpl:23
 	return qs422016
-//line template/index.qtpl:22
+//line template/index.qtpl:23
 }

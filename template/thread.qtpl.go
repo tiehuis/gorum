@@ -6,120 +6,130 @@ package template
 
 //line template/thread.qtpl:1
 import (
+	"fmt"
+
 	"github.com/tiehuis/gorum/model"
 )
 
-//line template/thread.qtpl:5
+//line template/thread.qtpl:7
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line template/thread.qtpl:5
+//line template/thread.qtpl:7
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line template/thread.qtpl:6
+//line template/thread.qtpl:8
 type ThreadPage struct {
 	Board model.Board
 	Posts []model.Post
 }
 
-//line template/thread.qtpl:12
+//line template/thread.qtpl:14
 func (tp *ThreadPage) StreamBody(qw422016 *qt422016.Writer) {
-	//line template/thread.qtpl:12
+	//line template/thread.qtpl:14
 	qw422016.N().S(`
-<pre>
-    <span><a href="/">Home</a></span>
-    <h3><a href="/board/`)
-	//line template/thread.qtpl:15
-	qw422016.E().S(tp.Board.Code)
-	//line template/thread.qtpl:15
-	qw422016.N().S(`">/`)
-	//line template/thread.qtpl:15
-	qw422016.E().S(tp.Board.Code)
-	//line template/thread.qtpl:15
-	qw422016.N().S(`/ - `)
-	//line template/thread.qtpl:15
-	qw422016.E().S(tp.Board.Name)
-	//line template/thread.qtpl:15
-	qw422016.N().S(`</a></h3>
+<table>
+<tbody>
 
-    <div><label for="show-new-post">+[New Post]</label></div>
-    <input id="show-new-post" type=checkbox>
-    <div id="new-post" class="hidden">
-        <form action="/board/`)
-	//line template/thread.qtpl:20
-	qw422016.E().S(tp.Board.Code)
-	//line template/thread.qtpl:20
-	qw422016.N().S(`/`)
-	//line template/thread.qtpl:20
-	qw422016.E().V(tp.Posts[0].Id)
-	//line template/thread.qtpl:20
-	qw422016.N().S(`" method="post">
-            <textarea required name="content" spellcheck="true" rows="2" maxlength="2000" placeholder="New Post"></textarea>
-            <input type="submit" value="send">
-        </form>
-    </div>
-
-    <table>
-    <tr>
-        <th>post</th>
-        <th>content</th>
-    </tr>
     `)
-	//line template/thread.qtpl:31
+	//line template/thread.qtpl:18
+	StreamNavbarRow(qw422016, tp.Board)
+	//line template/thread.qtpl:18
+	qw422016.N().S(`
+    <tr><td><br><td/></tr>
+
+    `)
+	//line template/thread.qtpl:21
+	StreamPostBoxRow(qw422016, fmt.Sprintf(`/board/%s/%v`, tp.Board.Code, tp.Posts[0].Id))
+	//line template/thread.qtpl:21
+	qw422016.N().S(`
+    <tr><td><br><td/></tr>
+
+    `)
+	//line template/thread.qtpl:24
 	for _, p := range tp.Posts {
-		//line template/thread.qtpl:31
+		//line template/thread.qtpl:24
 		qw422016.N().S(`
         <tr>
-            <td>`)
-		//line template/thread.qtpl:33
+        <td id="`)
+		//line template/thread.qtpl:26
 		qw422016.E().V(p.Id)
+		//line template/thread.qtpl:26
+		qw422016.N().S(`" class="post-table">
+            <div class="comment-header">
+                <span><a href="/board/`)
+		//line template/thread.qtpl:28
+		qw422016.E().S(tp.Board.Code)
+		//line template/thread.qtpl:28
+		qw422016.N().S(`/`)
+		//line template/thread.qtpl:28
+		qw422016.E().V(tp.Posts[0].Id)
+		//line template/thread.qtpl:28
+		qw422016.N().S(`#`)
+		//line template/thread.qtpl:28
+		qw422016.E().V(p.Id)
+		//line template/thread.qtpl:28
+		qw422016.N().S(`">`)
+		//line template/thread.qtpl:28
+		qw422016.E().V(p.Id)
+		//line template/thread.qtpl:28
+		qw422016.N().S(`</a></span>
+                <span>`)
+		//line template/thread.qtpl:29
+		qw422016.E().V(p.PostedAt)
+		//line template/thread.qtpl:29
+		qw422016.N().S(`</span>
+            </div>
+            <br>
+            <div class="comment">
+                `)
 		//line template/thread.qtpl:33
-		qw422016.N().S(`</td>
-            <td>`)
-		//line template/thread.qtpl:34
 		qw422016.E().S(p.Content)
-		//line template/thread.qtpl:34
-		qw422016.N().S(`</td>
+		//line template/thread.qtpl:33
+		qw422016.N().S(`
+            </div>
+        </td>
         </tr>
     `)
-		//line template/thread.qtpl:36
+		//line template/thread.qtpl:37
 	}
-	//line template/thread.qtpl:36
+	//line template/thread.qtpl:37
 	qw422016.N().S(`
-    </table>
-</pre>
+
+</tbody>
+</table>
 `)
-//line template/thread.qtpl:39
+//line template/thread.qtpl:41
 }
 
-//line template/thread.qtpl:39
+//line template/thread.qtpl:41
 func (tp *ThreadPage) WriteBody(qq422016 qtio422016.Writer) {
-	//line template/thread.qtpl:39
+	//line template/thread.qtpl:41
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line template/thread.qtpl:39
+	//line template/thread.qtpl:41
 	tp.StreamBody(qw422016)
-	//line template/thread.qtpl:39
+	//line template/thread.qtpl:41
 	qt422016.ReleaseWriter(qw422016)
-//line template/thread.qtpl:39
+//line template/thread.qtpl:41
 }
 
-//line template/thread.qtpl:39
+//line template/thread.qtpl:41
 func (tp *ThreadPage) Body() string {
-	//line template/thread.qtpl:39
+	//line template/thread.qtpl:41
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line template/thread.qtpl:39
+	//line template/thread.qtpl:41
 	tp.WriteBody(qb422016)
-	//line template/thread.qtpl:39
+	//line template/thread.qtpl:41
 	qs422016 := string(qb422016.B)
-	//line template/thread.qtpl:39
+	//line template/thread.qtpl:41
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line template/thread.qtpl:39
+	//line template/thread.qtpl:41
 	return qs422016
-//line template/thread.qtpl:39
+//line template/thread.qtpl:41
 }

@@ -1,3 +1,7 @@
+{% import (
+    "github.com/tiehuis/gorum/model"
+) %}
+
 {% interface
 Page {
     Body()
@@ -8,12 +12,45 @@ Page {
 <!doctype html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
-        <title>gorum</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/static/gorum.css" />
+        <title>gorum</title>
     </head>
     <body>
         {%= p.Body() %}
     </body>
 </html>
+{% endfunc %}
+
+{% func NavbarRow(b model.Board) %}
+    <tr id="navbar">
+        <td>
+            <table cellspacing="0" cellpadding="0" border="0">
+            <tbody>
+                <td style="padding-right:4px">
+                    <a href="/"><b>[home]</b></a>
+                </td>
+                <td>
+                    <a href="/board/{%s b.Code %}">/{%s b.Code %}/ - {%s b.Name %}</a>
+                </td>
+            </tbody>
+            </table>
+        </td>
+    </tr>
+{% endfunc %}
+
+{% func PostBoxRow(action string) %}
+    <tr id="postbox">
+        <td>
+            <div><label for="show-new-post">+[New]</label></div>
+            <input id="show-new-post" type=checkbox>
+            <div id="new-post" class="hidden">
+                <form action="{%s action %}" method="post">
+                    <textarea required name="content" spellcheck="true" rows="2" maxlength="2000"></textarea>
+                    <input type="submit" value="send">
+                </form>
+            </div>
+        </td>
+    </td>
 {% endfunc %}

@@ -6,73 +6,189 @@ package template
 
 //line template/layout_base.qtpl:1
 import (
+	"github.com/tiehuis/gorum/model"
+)
+
+//line template/layout_base.qtpl:5
+import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line template/layout_base.qtpl:1
+//line template/layout_base.qtpl:5
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line template/layout_base.qtpl:2
+//line template/layout_base.qtpl:6
 type Page interface {
-	//line template/layout_base.qtpl:2
+	//line template/layout_base.qtpl:6
 	Body() string
-	//line template/layout_base.qtpl:2
+	//line template/layout_base.qtpl:6
 	StreamBody(qw422016 *qt422016.Writer)
-	//line template/layout_base.qtpl:2
+	//line template/layout_base.qtpl:6
 	WriteBody(qq422016 qtio422016.Writer)
-//line template/layout_base.qtpl:2
+//line template/layout_base.qtpl:6
 }
 
-//line template/layout_base.qtpl:7
+//line template/layout_base.qtpl:11
 func StreamPageTemplate(qw422016 *qt422016.Writer, p Page) {
-	//line template/layout_base.qtpl:7
+	//line template/layout_base.qtpl:11
 	qw422016.N().S(`
 <!doctype html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
-        <title>gorum</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/static/gorum.css" />
+        <title>gorum</title>
     </head>
     <body>
         `)
-	//line template/layout_base.qtpl:16
+	//line template/layout_base.qtpl:21
 	p.StreamBody(qw422016)
-	//line template/layout_base.qtpl:16
+	//line template/layout_base.qtpl:21
 	qw422016.N().S(`
     </body>
 </html>
 `)
-//line template/layout_base.qtpl:19
+//line template/layout_base.qtpl:24
 }
 
-//line template/layout_base.qtpl:19
+//line template/layout_base.qtpl:24
 func WritePageTemplate(qq422016 qtio422016.Writer, p Page) {
-	//line template/layout_base.qtpl:19
+	//line template/layout_base.qtpl:24
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line template/layout_base.qtpl:19
+	//line template/layout_base.qtpl:24
 	StreamPageTemplate(qw422016, p)
-	//line template/layout_base.qtpl:19
+	//line template/layout_base.qtpl:24
 	qt422016.ReleaseWriter(qw422016)
-//line template/layout_base.qtpl:19
+//line template/layout_base.qtpl:24
 }
 
-//line template/layout_base.qtpl:19
+//line template/layout_base.qtpl:24
 func PageTemplate(p Page) string {
-	//line template/layout_base.qtpl:19
+	//line template/layout_base.qtpl:24
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line template/layout_base.qtpl:19
+	//line template/layout_base.qtpl:24
 	WritePageTemplate(qb422016, p)
-	//line template/layout_base.qtpl:19
+	//line template/layout_base.qtpl:24
 	qs422016 := string(qb422016.B)
-	//line template/layout_base.qtpl:19
+	//line template/layout_base.qtpl:24
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line template/layout_base.qtpl:19
+	//line template/layout_base.qtpl:24
 	return qs422016
-//line template/layout_base.qtpl:19
+//line template/layout_base.qtpl:24
+}
+
+//line template/layout_base.qtpl:26
+func StreamNavbarRow(qw422016 *qt422016.Writer, b model.Board) {
+	//line template/layout_base.qtpl:26
+	qw422016.N().S(`
+    <tr id="navbar">
+        <td>
+            <table cellspacing="0" cellpadding="0" border="0">
+            <tbody>
+                <td style="padding-right:4px">
+                    <a href="/"><b>[home]</b></a>
+                </td>
+                <td>
+                    <a href="/board/`)
+	//line template/layout_base.qtpl:35
+	qw422016.E().S(b.Code)
+	//line template/layout_base.qtpl:35
+	qw422016.N().S(`">/`)
+	//line template/layout_base.qtpl:35
+	qw422016.E().S(b.Code)
+	//line template/layout_base.qtpl:35
+	qw422016.N().S(`/ - `)
+	//line template/layout_base.qtpl:35
+	qw422016.E().S(b.Name)
+	//line template/layout_base.qtpl:35
+	qw422016.N().S(`</a>
+                </td>
+            </tbody>
+            </table>
+        </td>
+    </tr>
+`)
+//line template/layout_base.qtpl:41
+}
+
+//line template/layout_base.qtpl:41
+func WriteNavbarRow(qq422016 qtio422016.Writer, b model.Board) {
+	//line template/layout_base.qtpl:41
+	qw422016 := qt422016.AcquireWriter(qq422016)
+	//line template/layout_base.qtpl:41
+	StreamNavbarRow(qw422016, b)
+	//line template/layout_base.qtpl:41
+	qt422016.ReleaseWriter(qw422016)
+//line template/layout_base.qtpl:41
+}
+
+//line template/layout_base.qtpl:41
+func NavbarRow(b model.Board) string {
+	//line template/layout_base.qtpl:41
+	qb422016 := qt422016.AcquireByteBuffer()
+	//line template/layout_base.qtpl:41
+	WriteNavbarRow(qb422016, b)
+	//line template/layout_base.qtpl:41
+	qs422016 := string(qb422016.B)
+	//line template/layout_base.qtpl:41
+	qt422016.ReleaseByteBuffer(qb422016)
+	//line template/layout_base.qtpl:41
+	return qs422016
+//line template/layout_base.qtpl:41
+}
+
+//line template/layout_base.qtpl:43
+func StreamPostBoxRow(qw422016 *qt422016.Writer, action string) {
+	//line template/layout_base.qtpl:43
+	qw422016.N().S(`
+    <tr id="postbox">
+        <td>
+            <div><label for="show-new-post">+[New]</label></div>
+            <input id="show-new-post" type=checkbox>
+            <div id="new-post" class="hidden">
+                <form action="`)
+	//line template/layout_base.qtpl:49
+	qw422016.E().S(action)
+	//line template/layout_base.qtpl:49
+	qw422016.N().S(`" method="post">
+                    <textarea required name="content" spellcheck="true" rows="2" maxlength="2000"></textarea>
+                    <input type="submit" value="send">
+                </form>
+            </div>
+        </td>
+    </td>
+`)
+//line template/layout_base.qtpl:56
+}
+
+//line template/layout_base.qtpl:56
+func WritePostBoxRow(qq422016 qtio422016.Writer, action string) {
+	//line template/layout_base.qtpl:56
+	qw422016 := qt422016.AcquireWriter(qq422016)
+	//line template/layout_base.qtpl:56
+	StreamPostBoxRow(qw422016, action)
+	//line template/layout_base.qtpl:56
+	qt422016.ReleaseWriter(qw422016)
+//line template/layout_base.qtpl:56
+}
+
+//line template/layout_base.qtpl:56
+func PostBoxRow(action string) string {
+	//line template/layout_base.qtpl:56
+	qb422016 := qt422016.AcquireByteBuffer()
+	//line template/layout_base.qtpl:56
+	WritePostBoxRow(qb422016, action)
+	//line template/layout_base.qtpl:56
+	qs422016 := string(qb422016.B)
+	//line template/layout_base.qtpl:56
+	qt422016.ReleaseByteBuffer(qb422016)
+	//line template/layout_base.qtpl:56
+	return qs422016
+//line template/layout_base.qtpl:56
 }

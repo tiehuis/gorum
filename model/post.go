@@ -1,6 +1,9 @@
 package model
 
-import "log"
+import (
+	"log"
+	"time"
+)
 
 type Post struct {
 	Id             int64
@@ -8,7 +11,7 @@ type Post struct {
 	Content        string
 	ThreadParentId int64
 	BoardParentId  int64
-	PostedAt       int64
+	PostedAt       time.Time
 }
 
 type PostW struct {
@@ -22,8 +25,8 @@ func CreatePost(p PostW) (int64, error) {
 		return 0, err
 	}
 
-	_, err = db.Exec(`INSERT INTO post(content, thread_parent_id, board_parent_id, posted_at) VALUES
-					 (?, ?, ?, strftime("%s", CURRENT_TIME));`, p.Content, p.ThreadParentId, t.BoardParentId)
+	_, err = db.Exec(`INSERT INTO post(content, thread_parent_id, board_parent_id) VALUES
+					 (?, ?, ?);`, p.Content, p.ThreadParentId, t.BoardParentId)
 	if err != nil {
 		return 0, err
 	}
@@ -45,8 +48,8 @@ type ThreadW struct {
 }
 
 func CreateThread(t ThreadW) (int64, error) {
-	_, err := db.Exec(`INSERT INTO post(content, board_parent_id, posted_at) VALUES
-					 (?, ?, strftime("%s", CURRENT_TIME));`, t.Content, t.BoardParentId)
+	_, err := db.Exec(`INSERT INTO post(content, board_parent_id) VALUES
+					 (?, ?);`, t.Content, t.BoardParentId)
 	if err != nil {
 		return 0, err
 	}

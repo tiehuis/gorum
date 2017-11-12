@@ -52,14 +52,14 @@ func BoardPost(ctx *fasthttp.RequestCtx) {
 	}
 
 	rlog.Debugf("Creating new thread: %d %d", b.Id, len(content))
-	_, err = model.CreateThread(model.ThreadW{b.Id, content})
+	nid, err := model.CreateThread(model.ThreadW{b.Id, content})
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
 		ctx.SetBody([]byte("failed to create post right now"))
 		return
 	}
 
-	rp := fmt.Sprintf("/board/%s", b.Code)
+	rp := fmt.Sprintf("/board/%s/%v", b.Code, nid)
 	rlog.Debug("Performing BoardPost redirect to", rp)
 	ctx.Redirect(rp, fasthttp.StatusFound)
 }

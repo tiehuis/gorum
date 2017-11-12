@@ -1,5 +1,9 @@
 package model
 
+import (
+	"fmt"
+)
+
 func migration0() {
 	CheckExec(`CREATE TABLE config(name VARCHAR(64), val TEXT);`)
 	CheckExec(`CREATE UNIQUE INDEX config_key_index on config(name);`)
@@ -17,7 +21,7 @@ func migration0() {
 				content TEXT NOT NULL,
 				thread_parent_id INTEGER REFERENCES post(id),
 				board_parent_id INTEGER NOT NULL REFERENCES board(id),
-				posted_at INTEGER NOT NULL
+				posted_at DATETIME DEFAULT current_timestamp
 
 				CHECK(
 					length(content) <= 2000
@@ -33,14 +37,19 @@ func testdata0() {
 				('z', 'misc')
 			;`)
 
-	CheckExec(`INSERT INTO post(content, thread_parent_id, board_parent_id, posted_at) VALUES
-				('content 1', NULL, 1, strftime("%s", CURRENT_TIME)),
-				('content 2', 1, 1, strftime("%s", CURRENT_TIME)),
-				('content 3', 1, 1, strftime("%s", CURRENT_TIME)),
-				('content 4', 1, 1, strftime("%s", CURRENT_TIME)),
+	CheckExec(`INSERT INTO post(content, thread_parent_id, board_parent_id) VALUES
+				('content 1', NULL, 1),
+				('content 2', 1, 1),
+				('content 3', 1, 1),
+				('content 4', 1, 1),
 
-				('content 1', NULL, 2, strftime("%s", CURRENT_TIME)),
-				('content f2', 5, 2, strftime("%s", CURRENT_TIME)),
-				('content s3', 5, 2, strftime("%s", CURRENT_TIME))
+				('content 1', NULL, 2),
+				('content f2', 5, 2),
+				('content s3', 5, 2)
 			;`)
+
+	for i := 0; i < 200; i += 1 {
+		CheckExec(fmt.Sprintf(`INSERT INTO post(content, thread_parent_id, board_parent_id) VALUES
+					('content %d', 1, 1)`, i))
+	}
 }
