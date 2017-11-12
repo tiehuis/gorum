@@ -93,6 +93,22 @@ func ThreadPost(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
+	pc, err := t.GetParentThreadCount()
+	if err != nil {
+		ctx.SetStatusCode(fasthttp.StatusBadRequest)
+		ctx.SetBody([]byte("could not determine thread count"))
+		return
+	}
+
+	// If two concurrent requests both pass this at a similar time we can have
+	// more than 200 posts in a thread. This isn't a big deal so we don't worry
+	// about it.
+	if pc >= 200 {
+		ctx.SetStatusCode(fasthttp.StatusBadRequest)
+		ctx.SetBody([]byte("thread post limit has been reached"))
+		return
+	}
+
 	rlog.Debugf("Creating new post: %d %d", tid, len(content))
 	nid, err := model.CreatePost(model.PostW{tid, content})
 	if err != nil {

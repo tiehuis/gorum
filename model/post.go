@@ -86,6 +86,25 @@ func GetPostById(id int64) (Post, error) {
 	return p, nil
 }
 
+func (p *Post) GetParentThreadCount() (int64, error) {
+	var qId int64
+	if p.ThreadParentId == 0 {
+		qId = p.Id
+	} else {
+		qId = p.ThreadParentId
+	}
+
+	r := db.QueryRow(`SELECT COUNT(*) FROM post WHERE thread_parent_id = ? OR id = ?;`, qId, qId)
+
+	var c int64
+	err := r.Scan(&c)
+	if err != nil {
+		return 0, err
+	}
+
+	return c, nil
+}
+
 func (p *Post) GetParentThread() ([]Post, error) {
 	var qId int64
 	if p.ThreadParentId == 0 {

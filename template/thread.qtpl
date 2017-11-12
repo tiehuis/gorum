@@ -18,8 +18,12 @@ type ThreadPage struct {
     {%= NavbarRow(tp.Board) %}
     <tr><td><br><td/></tr>
 
-    {%= PostBoxRow(fmt.Sprintf(`/board/%s/%v`, tp.Board.Code, tp.Posts[0].Id)) %}
-    <tr><td><br><td/></tr>
+    {% if len(tp.Posts) <= 200 %}
+        {%= PostBoxRow(fmt.Sprintf(`/board/%s/%v`, tp.Board.Code, tp.Posts[0].Id)) %}
+    {% else %}
+        <tr><td>Reached post limit!</td></tr>
+    {% endif %}
+    <tr><td><br></td></tr>
 
     {% for _, p := range tp.Posts %}
         <tr>
