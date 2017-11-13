@@ -38,7 +38,7 @@ func BoardPost(ctx *fasthttp.RequestCtx) {
 
 	if isRateLimited(ctx) {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		ctx.SetBody([]byte("you have just posted something, try again soon"))
+		GeneralError(ctx, "you have just posted something, try again in a minute")
 		return
 	}
 
@@ -46,14 +46,14 @@ func BoardPost(ctx *fasthttp.RequestCtx) {
 	b, err := model.GetBoardByCode(board)
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		ctx.SetBody([]byte("could not find board"))
+		GeneralError(ctx, "could not find board")
 		return
 	}
 
 	content := string(a.Peek("content"))
 	if len(content) == 0 || len(content) >= 2000 {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		ctx.SetBody([]byte("content must be between 1 and 2000 bytes inclusive"))
+		GeneralError(ctx, "content must be between 1 and 2000 bytes inclusive")
 		return
 	}
 
@@ -61,7 +61,7 @@ func BoardPost(ctx *fasthttp.RequestCtx) {
 	nid, err := model.CreateThread(model.ThreadW{b.Id, content})
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-		ctx.SetBody([]byte("failed to create post right now"))
+		GeneralError(ctx, "failed to create post right now")
 		return
 	}
 

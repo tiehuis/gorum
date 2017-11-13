@@ -18,34 +18,34 @@ func Thread(ctx *fasthttp.RequestCtx) {
 	tId, err := strconv.ParseInt(tpath, 10, 64)
 	if err != nil {
 		rlog.Debug("failed to parse thread", tpath, err)
-		ctx.NotFound()
+		NotFound(ctx)
 		return
 	}
 	t, err := model.GetPostById(tId)
 	if err != nil {
 		rlog.Debug("failed to get post", tId, err)
-		ctx.NotFound()
+		NotFound(ctx)
 		return
 	}
 
 	b, err := model.GetBoardById(t.BoardParentId)
 	if err != nil {
 		rlog.Debug("failed to get board with id", t.BoardParentId, err)
-		ctx.NotFound()
+		NotFound(ctx)
 		return
 	}
 
 	board := ctx.UserValue("board").(string)
 	if b.Code != board {
 		rlog.Debugf("requested post with wrong board; found %s but post is on %s", board, b.Code)
-		ctx.NotFound()
+		NotFound(ctx)
 		return
 	}
 
 	ts, err := t.GetParentThread()
 	if err != nil {
 		rlog.Debug("failed to get parent thread id of post", t.Id, err)
-		ctx.NotFound()
+		NotFound(ctx)
 		return
 	}
 
@@ -59,7 +59,7 @@ func ThreadPost(ctx *fasthttp.RequestCtx) {
 
 	if isRateLimited(ctx) {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		ctx.SetBody([]byte("you have just posted something, try again soon"))
+		GeneralError(ctx, "you have just posted something, try again soon")
 		return
 	}
 
@@ -67,7 +67,7 @@ func ThreadPost(ctx *fasthttp.RequestCtx) {
 	b, err := model.GetBoardByCode(board)
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		ctx.SetBody([]byte("could not find board"))
+		GeneralError(ctx, "could not find board")
 		return
 	}
 
@@ -75,34 +75,34 @@ func ThreadPost(ctx *fasthttp.RequestCtx) {
 	tid, err := strconv.ParseInt(tis, 10, 64)
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		ctx.SetBody([]byte("could not parse thread id"))
+		GeneralError(ctx, "could not parse thread id")
 		return
 	}
 
 	t, err := model.GetPostById(tid)
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		ctx.SetBody([]byte("could not find post id"))
+		GeneralError(ctx, "could not find post id")
 		return
 	}
 
 	if t.ThreadParentId != 0 {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		ctx.SetBody([]byte("post id isn't a top level thread"))
+		GeneralError(ctx, "post id isn't a top level thread")
 		return
 	}
 
 	content := string(a.Peek("content"))
 	if len(content) == 0 || len(content) >= 2000 {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		ctx.SetBody([]byte("content must be between 1 and 2000 bytes inclusive"))
+		GeneralError(ctx, "content must be between 1 and 2000 bytes inclusive")
 		return
 	}
 
 	pc, err := t.GetParentThreadCount()
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		ctx.SetBody([]byte("could not determine thread count"))
+		GeneralError(ctx, "could not determine thread count")
 		return
 	}
 
@@ -111,7 +111,7 @@ func ThreadPost(ctx *fasthttp.RequestCtx) {
 	// about it.
 	if pc >= 200 {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		ctx.SetBody([]byte("thread post limit has been reached"))
+		GeneralError(ctx, "thread post limit has been reached")
 		return
 	}
 
@@ -119,7 +119,7 @@ func ThreadPost(ctx *fasthttp.RequestCtx) {
 	nid, err := model.CreatePost(model.PostW{tid, content})
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-		ctx.SetBody([]byte("failed to create post right now"))
+		GeneralError(ctx, "failed to create post right now")
 		return
 	}
 

@@ -104,3 +104,49 @@ func (ep *NotFoundPage) Body() string {
 	return qs422016
 //line template/error.qtpl:23
 }
+
+//line template/error.qtpl:26
+type GeneralError struct {
+	Message string
+}
+
+//line template/error.qtpl:31
+func (ge *GeneralError) StreamBody(qw422016 *qt422016.Writer) {
+	//line template/error.qtpl:31
+	qw422016.N().S(`
+<pre>
+    `)
+	//line template/error.qtpl:33
+	qw422016.E().S(ge.Message)
+	//line template/error.qtpl:33
+	qw422016.N().S(`
+</pre>
+`)
+//line template/error.qtpl:35
+}
+
+//line template/error.qtpl:35
+func (ge *GeneralError) WriteBody(qq422016 qtio422016.Writer) {
+	//line template/error.qtpl:35
+	qw422016 := qt422016.AcquireWriter(qq422016)
+	//line template/error.qtpl:35
+	ge.StreamBody(qw422016)
+	//line template/error.qtpl:35
+	qt422016.ReleaseWriter(qw422016)
+//line template/error.qtpl:35
+}
+
+//line template/error.qtpl:35
+func (ge *GeneralError) Body() string {
+	//line template/error.qtpl:35
+	qb422016 := qt422016.AcquireByteBuffer()
+	//line template/error.qtpl:35
+	ge.WriteBody(qb422016)
+	//line template/error.qtpl:35
+	qs422016 := string(qb422016.B)
+	//line template/error.qtpl:35
+	qt422016.ReleaseByteBuffer(qb422016)
+	//line template/error.qtpl:35
+	return qs422016
+//line template/error.qtpl:35
+}

@@ -21,3 +21,15 @@ type NotFoundPage struct {}
     404 error!
 </pre>
 {% endfunc %}
+
+{% code
+type GeneralError struct {
+    Message string
+}
+%}
+
+{% func (ge *GeneralError) Body() %}
+<pre>
+    {%s ge.Message %}
+</pre>
+{% endfunc %}
