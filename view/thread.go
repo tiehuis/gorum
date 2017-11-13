@@ -57,6 +57,12 @@ func ThreadPost(ctx *fasthttp.RequestCtx) {
 	ctx.SetContentType("text/html; charset=utf-8")
 	a := ctx.PostArgs()
 
+	if isRateLimited(ctx) {
+		ctx.SetStatusCode(fasthttp.StatusBadRequest)
+		ctx.SetBody([]byte("you have just posted something, try again soon"))
+		return
+	}
+
 	board := ctx.UserValue("board").(string)
 	b, err := model.GetBoardByCode(board)
 	if err != nil {
@@ -116,6 +122,8 @@ func ThreadPost(ctx *fasthttp.RequestCtx) {
 		ctx.SetBody([]byte("failed to create post right now"))
 		return
 	}
+
+	startRateLimit(ctx)
 
 	rp := fmt.Sprintf("/board/%s/%d/#%d", b.Code, tid, nid)
 	rlog.Debug("Performing ThreadPost redirect to", rp)

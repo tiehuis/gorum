@@ -40,6 +40,7 @@ func main() {
 
 	rlog.Info("Started server on", *listenAddr)
 
+	view.InitMemCache()
 	routes := routes().Handler
 	routes = view.TimerHandler(routes)
 
