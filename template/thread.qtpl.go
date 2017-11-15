@@ -9,143 +9,144 @@ import (
 	"fmt"
 
 	"github.com/tiehuis/gorum/model"
+	"github.com/tiehuis/gorum/util"
 )
 
-//line template/thread.qtpl:7
+//line template/thread.qtpl:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line template/thread.qtpl:7
+//line template/thread.qtpl:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line template/thread.qtpl:8
+//line template/thread.qtpl:9
 type ThreadPage struct {
 	Board model.Board
 	Posts []model.Post
 }
 
-//line template/thread.qtpl:14
+//line template/thread.qtpl:15
 func (tp *ThreadPage) StreamBody(qw422016 *qt422016.Writer) {
-	//line template/thread.qtpl:14
+	//line template/thread.qtpl:15
 	qw422016.N().S(`
 <table>
 <tbody>
 
     `)
-	//line template/thread.qtpl:18
+	//line template/thread.qtpl:19
 	StreamNavbarRow(qw422016, tp.Board)
-	//line template/thread.qtpl:18
+	//line template/thread.qtpl:19
 	qw422016.N().S(`
     <tr><td><br><td/></tr>
 
     `)
-	//line template/thread.qtpl:21
+	//line template/thread.qtpl:22
 	if len(tp.Posts) <= 200 {
-		//line template/thread.qtpl:21
+		//line template/thread.qtpl:22
 		qw422016.N().S(`
         `)
-		//line template/thread.qtpl:22
+		//line template/thread.qtpl:23
 		StreamPostBoxRow(qw422016, fmt.Sprintf(`/board/%s/%v`, tp.Board.Code, tp.Posts[0].Id))
-		//line template/thread.qtpl:22
+		//line template/thread.qtpl:23
 		qw422016.N().S(`
     `)
-		//line template/thread.qtpl:23
+		//line template/thread.qtpl:24
 	} else {
-		//line template/thread.qtpl:23
+		//line template/thread.qtpl:24
 		qw422016.N().S(`
         <tr><td>Reached post limit!</td></tr>
     `)
-		//line template/thread.qtpl:25
+		//line template/thread.qtpl:26
 	}
-	//line template/thread.qtpl:25
+	//line template/thread.qtpl:26
 	qw422016.N().S(`
     <tr><td><br></td></tr>
 
     `)
-	//line template/thread.qtpl:28
+	//line template/thread.qtpl:29
 	for _, p := range tp.Posts {
-		//line template/thread.qtpl:28
+		//line template/thread.qtpl:29
 		qw422016.N().S(`
         <tr>
         <td id="`)
-		//line template/thread.qtpl:30
+		//line template/thread.qtpl:31
 		qw422016.E().V(p.Id)
-		//line template/thread.qtpl:30
+		//line template/thread.qtpl:31
 		qw422016.N().S(`" class="post-table">
             <div class="comment-header">
                 <span><a href="/board/`)
-		//line template/thread.qtpl:32
+		//line template/thread.qtpl:33
 		qw422016.E().S(tp.Board.Code)
-		//line template/thread.qtpl:32
+		//line template/thread.qtpl:33
 		qw422016.N().S(`/`)
-		//line template/thread.qtpl:32
+		//line template/thread.qtpl:33
 		qw422016.E().V(tp.Posts[0].Id)
-		//line template/thread.qtpl:32
+		//line template/thread.qtpl:33
 		qw422016.N().S(`#`)
-		//line template/thread.qtpl:32
+		//line template/thread.qtpl:33
 		qw422016.E().V(p.Id)
-		//line template/thread.qtpl:32
+		//line template/thread.qtpl:33
 		qw422016.N().S(`">`)
-		//line template/thread.qtpl:32
+		//line template/thread.qtpl:33
 		qw422016.E().V(p.Id)
-		//line template/thread.qtpl:32
+		//line template/thread.qtpl:33
 		qw422016.N().S(`</a></span>
                 <span>`)
-		//line template/thread.qtpl:33
+		//line template/thread.qtpl:34
 		qw422016.E().V(p.PostedAt)
-		//line template/thread.qtpl:33
+		//line template/thread.qtpl:34
 		qw422016.N().S(`</span>
             </div>
             <br>
             <div class="comment">
                 `)
-		//line template/thread.qtpl:37
-		qw422016.E().S(p.Content)
-		//line template/thread.qtpl:37
+		//line template/thread.qtpl:38
+		qw422016.N().S(util.FormatPost(p.Content))
+		//line template/thread.qtpl:38
 		qw422016.N().S(`
             </div>
         </td>
         </tr>
     `)
-		//line template/thread.qtpl:41
+		//line template/thread.qtpl:42
 	}
-	//line template/thread.qtpl:41
+	//line template/thread.qtpl:42
 	qw422016.N().S(`
 
 </tbody>
 </table>
 `)
-//line template/thread.qtpl:45
+//line template/thread.qtpl:46
 }
 
-//line template/thread.qtpl:45
+//line template/thread.qtpl:46
 func (tp *ThreadPage) WriteBody(qq422016 qtio422016.Writer) {
-	//line template/thread.qtpl:45
+	//line template/thread.qtpl:46
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line template/thread.qtpl:45
+	//line template/thread.qtpl:46
 	tp.StreamBody(qw422016)
-	//line template/thread.qtpl:45
+	//line template/thread.qtpl:46
 	qt422016.ReleaseWriter(qw422016)
-//line template/thread.qtpl:45
+//line template/thread.qtpl:46
 }
 
-//line template/thread.qtpl:45
+//line template/thread.qtpl:46
 func (tp *ThreadPage) Body() string {
-	//line template/thread.qtpl:45
+	//line template/thread.qtpl:46
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line template/thread.qtpl:45
+	//line template/thread.qtpl:46
 	tp.WriteBody(qb422016)
-	//line template/thread.qtpl:45
+	//line template/thread.qtpl:46
 	qs422016 := string(qb422016.B)
-	//line template/thread.qtpl:45
+	//line template/thread.qtpl:46
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line template/thread.qtpl:45
+	//line template/thread.qtpl:46
 	return qs422016
-//line template/thread.qtpl:45
+//line template/thread.qtpl:46
 }

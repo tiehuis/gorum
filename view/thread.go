@@ -21,6 +21,7 @@ func Thread(ctx *fasthttp.RequestCtx) {
 		NotFound(ctx)
 		return
 	}
+
 	t, err := model.GetPostById(tId)
 	if err != nil {
 		rlog.Debug("failed to get post", tId, err)
@@ -32,6 +33,13 @@ func Thread(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		rlog.Debug("failed to get board with id", t.BoardParentId, err)
 		NotFound(ctx)
+		return
+	}
+
+	if t.ThreadParentId != 0 {
+		rp := fmt.Sprintf("/board/%s/%v#%v", b.Code, t.ThreadParentId, t.Id)
+		rlog.Debug("Performing Thread redirect to", rp)
+		ctx.Redirect(rp, fasthttp.StatusFound)
 		return
 	}
 

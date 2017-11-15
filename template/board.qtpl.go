@@ -9,123 +9,124 @@ import (
 	"fmt"
 
 	"github.com/tiehuis/gorum/model"
+	"github.com/tiehuis/gorum/util"
 )
 
-//line template/board.qtpl:7
+//line template/board.qtpl:8
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line template/board.qtpl:7
+//line template/board.qtpl:8
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line template/board.qtpl:8
+//line template/board.qtpl:9
 type BoardPage struct {
 	Board   model.Board
 	Threads []model.Post
 }
 
-//line template/board.qtpl:14
+//line template/board.qtpl:15
 func (bp *BoardPage) StreamBody(qw422016 *qt422016.Writer) {
-	//line template/board.qtpl:14
+	//line template/board.qtpl:15
 	qw422016.N().S(`
 <table>
 <tbody>
 
     `)
-	//line template/board.qtpl:18
+	//line template/board.qtpl:19
 	StreamNavbarRow(qw422016, bp.Board)
-	//line template/board.qtpl:18
+	//line template/board.qtpl:19
 	qw422016.N().S(`
     <tr><td><br><td/></tr>
 
     `)
-	//line template/board.qtpl:21
+	//line template/board.qtpl:22
 	StreamPostBoxRow(qw422016, fmt.Sprintf(`/board/%s`, bp.Board.Code))
-	//line template/board.qtpl:21
+	//line template/board.qtpl:22
 	qw422016.N().S(`
     <tr><td><br><td/></tr>
 
     `)
-	//line template/board.qtpl:24
+	//line template/board.qtpl:25
 	for _, p := range bp.Threads {
-		//line template/board.qtpl:24
+		//line template/board.qtpl:25
 		qw422016.N().S(`
         <tr>
         <td id="`)
-		//line template/board.qtpl:26
+		//line template/board.qtpl:27
 		qw422016.E().V(p.Id)
-		//line template/board.qtpl:26
+		//line template/board.qtpl:27
 		qw422016.N().S(`" class="post-table">
             <div class="comment-header">
                 <span><a href="/board/`)
-		//line template/board.qtpl:28
+		//line template/board.qtpl:29
 		qw422016.E().S(bp.Board.Code)
-		//line template/board.qtpl:28
+		//line template/board.qtpl:29
 		qw422016.N().S(`/`)
-		//line template/board.qtpl:28
+		//line template/board.qtpl:29
 		qw422016.E().V(p.Id)
-		//line template/board.qtpl:28
+		//line template/board.qtpl:29
 		qw422016.N().S(`">`)
-		//line template/board.qtpl:28
+		//line template/board.qtpl:29
 		qw422016.E().V(p.Id)
-		//line template/board.qtpl:28
+		//line template/board.qtpl:29
 		qw422016.N().S(`</a></span>
                 <span>`)
-		//line template/board.qtpl:29
+		//line template/board.qtpl:30
 		qw422016.E().V(p.PostedAt)
-		//line template/board.qtpl:29
+		//line template/board.qtpl:30
 		qw422016.N().S(`</span>
             </div>
             <br>
             <div class="comment">
                 `)
-		//line template/board.qtpl:33
-		qw422016.E().S(p.Content)
-		//line template/board.qtpl:33
+		//line template/board.qtpl:34
+		qw422016.N().S(util.FormatPost(p.Content))
+		//line template/board.qtpl:34
 		qw422016.N().S(`
             </div>
         </td>
         </tr>
     `)
-		//line template/board.qtpl:37
+		//line template/board.qtpl:38
 	}
-	//line template/board.qtpl:37
+	//line template/board.qtpl:38
 	qw422016.N().S(`
 
 </tbody>
 </table>
 `)
-//line template/board.qtpl:41
+//line template/board.qtpl:42
 }
 
-//line template/board.qtpl:41
+//line template/board.qtpl:42
 func (bp *BoardPage) WriteBody(qq422016 qtio422016.Writer) {
-	//line template/board.qtpl:41
+	//line template/board.qtpl:42
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line template/board.qtpl:41
+	//line template/board.qtpl:42
 	bp.StreamBody(qw422016)
-	//line template/board.qtpl:41
+	//line template/board.qtpl:42
 	qt422016.ReleaseWriter(qw422016)
-//line template/board.qtpl:41
+//line template/board.qtpl:42
 }
 
-//line template/board.qtpl:41
+//line template/board.qtpl:42
 func (bp *BoardPage) Body() string {
-	//line template/board.qtpl:41
+	//line template/board.qtpl:42
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line template/board.qtpl:41
+	//line template/board.qtpl:42
 	bp.WriteBody(qb422016)
-	//line template/board.qtpl:41
+	//line template/board.qtpl:42
 	qs422016 := string(qb422016.B)
-	//line template/board.qtpl:41
+	//line template/board.qtpl:42
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line template/board.qtpl:41
+	//line template/board.qtpl:42
 	return qs422016
-//line template/board.qtpl:41
+//line template/board.qtpl:42
 }

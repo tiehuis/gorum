@@ -17,14 +17,14 @@ func Board(ctx *fasthttp.RequestCtx) {
 	b, err := model.GetBoardByCode(path)
 	if err != nil {
 		rlog.Debug("failed to find board", path, err)
-		ctx.NotFound()
+		NotFound(ctx)
 		return
 	}
 
 	ps, err := b.GetAllPosts()
 	if err != nil {
 		rlog.Debug("failed to get posts for board", path, err)
-		ctx.NotFound()
+		NotFound(ctx)
 		return
 	}
 

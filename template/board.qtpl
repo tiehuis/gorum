@@ -2,6 +2,7 @@
     "fmt"
 
     "github.com/tiehuis/gorum/model"
+    "github.com/tiehuis/gorum/util"
 ) %}
 
 {% code
@@ -30,7 +31,7 @@ type BoardPage struct {
             </div>
             <br>
             <div class="comment">
-                {%s p.Content %}
+                {%s= util.FormatPost(p.Content) %}
             </div>
         </td>
         </tr>

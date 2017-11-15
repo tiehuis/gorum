@@ -33,6 +33,10 @@ body {
     font-size: 9pt;
 }
 
+.comment > p {
+    margin-bottom: 1em;
+}
+
 .post-table {
     background-color: aliceblue;
     border-top-style: ridge;
@@ -51,31 +55,31 @@ input[type=checkbox]:checked + div {
 }
 
 `)
-//line static/gorum.css.qtpl:31
+//line static/gorum.css.qtpl:35
 }
 
-//line static/gorum.css.qtpl:31
+//line static/gorum.css.qtpl:35
 func WriteStyleSheet(qq422016 qtio422016.Writer) {
-	//line static/gorum.css.qtpl:31
+	//line static/gorum.css.qtpl:35
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line static/gorum.css.qtpl:31
+	//line static/gorum.css.qtpl:35
 	StreamStyleSheet(qw422016)
-	//line static/gorum.css.qtpl:31
+	//line static/gorum.css.qtpl:35
 	qt422016.ReleaseWriter(qw422016)
-//line static/gorum.css.qtpl:31
+//line static/gorum.css.qtpl:35
 }
 
-//line static/gorum.css.qtpl:31
+//line static/gorum.css.qtpl:35
 func StyleSheet() string {
-	//line static/gorum.css.qtpl:31
+	//line static/gorum.css.qtpl:35
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line static/gorum.css.qtpl:31
+	//line static/gorum.css.qtpl:35
 	WriteStyleSheet(qb422016)
-	//line static/gorum.css.qtpl:31
+	//line static/gorum.css.qtpl:35
 	qs422016 := string(qb422016.B)
-	//line static/gorum.css.qtpl:31
+	//line static/gorum.css.qtpl:35
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line static/gorum.css.qtpl:31
+	//line static/gorum.css.qtpl:35
 	return qs422016
-//line static/gorum.css.qtpl:31
+//line static/gorum.css.qtpl:35
 }

@@ -22,6 +22,7 @@ func routes() *fasthttprouter.Router {
 	router.POST("/board/:board", view.BoardPost)
 	router.GET("/board/:board/:thread", view.Thread)
 	router.POST("/board/:board/:thread", view.ThreadPost)
+	router.GET("/post/:id", view.Post)
 
 	router.GET("/static/*path", view.StaticFile)
 

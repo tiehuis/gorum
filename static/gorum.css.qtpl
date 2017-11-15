@@ -11,6 +11,10 @@ body {
     font-size: 9pt;
 }
 
+.comment > p {
+    margin-bottom: 1em;
+}
+
 .post-table {
     background-color: aliceblue;
     border-top-style: ridge;
