@@ -36,8 +36,8 @@ func Thread(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	if t.ThreadParentId != 0 {
-		rp := fmt.Sprintf("/board/%s/%v#%v", b.Code, t.ThreadParentId, t.Id)
+	if t.ThreadParentId.Valid {
+		rp := fmt.Sprintf("/board/%s/%v#%v", b.Code, t.ThreadParentId.Int64, t.Id)
 		rlog.Debug("Performing Thread redirect to", rp)
 		ctx.Redirect(rp, fasthttp.StatusFound)
 		return
@@ -94,9 +94,15 @@ func ThreadPost(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	if t.ThreadParentId != 0 {
+	if t.ThreadParentId.Valid {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
 		GeneralError(ctx, "post id isn't a top level thread")
+		return
+	}
+
+	if t.ArchivedAt.Valid {
+		ctx.SetStatusCode(fasthttp.StatusBadRequest)
+		GeneralError(ctx, "cannot post to an archived thread")
 		return
 	}
 
@@ -128,6 +134,7 @@ func ThreadPost(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
 		GeneralError(ctx, "failed to create post right now")
+		rlog.Debug("Failed to create post:", err)
 		return
 	}
 

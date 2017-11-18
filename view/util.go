@@ -6,6 +6,8 @@ import (
 	"github.com/patrickmn/go-cache"
 	"github.com/romana/rlog"
 	"github.com/valyala/fasthttp"
+
+	"github.com/tiehuis/gorum/config"
 )
 
 var memcache *cache.Cache
@@ -21,7 +23,8 @@ func TimerHandler(h fasthttp.RequestHandler) fasthttp.RequestHandler {
 }
 
 func InitMemCache() {
-	memcache = cache.New(time.Minute, 2*time.Minute)
+	s := time.Duration(config.PostRateLimit)
+	memcache = cache.New(s*time.Second, 2*s*time.Second)
 }
 
 // This is a very rudimentary set of checks and should not be relied on.

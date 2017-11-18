@@ -20,6 +20,10 @@ body {
     border-top-style: ridge;
 }
 
+.new-post-toggle:hover {
+    font-weight: bold;
+}
+
 .hidden {
     display: none;
 }

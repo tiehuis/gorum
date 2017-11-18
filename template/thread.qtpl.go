@@ -9,144 +9,149 @@ import (
 	"fmt"
 
 	"github.com/tiehuis/gorum/model"
-	"github.com/tiehuis/gorum/util"
 )
 
-//line template/thread.qtpl:8
+//line template/thread.qtpl:7
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line template/thread.qtpl:8
+//line template/thread.qtpl:7
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line template/thread.qtpl:9
+//line template/thread.qtpl:8
 type ThreadPage struct {
 	Board model.Board
 	Posts []model.Post
 }
 
-//line template/thread.qtpl:15
+//line template/thread.qtpl:14
 func (tp *ThreadPage) StreamBody(qw422016 *qt422016.Writer) {
-	//line template/thread.qtpl:15
+	//line template/thread.qtpl:14
 	qw422016.N().S(`
 <table>
 <tbody>
 
     `)
-	//line template/thread.qtpl:19
+	//line template/thread.qtpl:18
 	StreamNavbarRow(qw422016, tp.Board)
-	//line template/thread.qtpl:19
+	//line template/thread.qtpl:18
 	qw422016.N().S(`
     <tr><td><br><td/></tr>
 
     `)
-	//line template/thread.qtpl:22
-	if len(tp.Posts) <= 200 {
-		//line template/thread.qtpl:22
+	//line template/thread.qtpl:21
+	if tp.Posts[0].ArchivedAt.Valid {
+		//line template/thread.qtpl:21
+		qw422016.N().S(`
+        <tr><td>Thread has been archived!</td></tr>
+    `)
+		//line template/thread.qtpl:23
+	} else if len(tp.Posts) <= 200 {
+		//line template/thread.qtpl:23
 		qw422016.N().S(`
         `)
-		//line template/thread.qtpl:23
+		//line template/thread.qtpl:24
 		StreamPostBoxRow(qw422016, fmt.Sprintf(`/board/%s/%v`, tp.Board.Code, tp.Posts[0].Id))
-		//line template/thread.qtpl:23
+		//line template/thread.qtpl:24
 		qw422016.N().S(`
     `)
-		//line template/thread.qtpl:24
+		//line template/thread.qtpl:25
 	} else {
-		//line template/thread.qtpl:24
+		//line template/thread.qtpl:25
 		qw422016.N().S(`
         <tr><td>Reached post limit!</td></tr>
     `)
-		//line template/thread.qtpl:26
+		//line template/thread.qtpl:27
 	}
-	//line template/thread.qtpl:26
+	//line template/thread.qtpl:27
 	qw422016.N().S(`
     <tr><td><br></td></tr>
 
     `)
-	//line template/thread.qtpl:29
+	//line template/thread.qtpl:30
 	for _, p := range tp.Posts {
-		//line template/thread.qtpl:29
+		//line template/thread.qtpl:30
 		qw422016.N().S(`
         <tr>
         <td id="`)
-		//line template/thread.qtpl:31
+		//line template/thread.qtpl:32
 		qw422016.E().V(p.Id)
-		//line template/thread.qtpl:31
+		//line template/thread.qtpl:32
 		qw422016.N().S(`" class="post-table">
             <div class="comment-header">
                 <span><a href="/board/`)
-		//line template/thread.qtpl:33
+		//line template/thread.qtpl:34
 		qw422016.E().S(tp.Board.Code)
-		//line template/thread.qtpl:33
+		//line template/thread.qtpl:34
 		qw422016.N().S(`/`)
-		//line template/thread.qtpl:33
+		//line template/thread.qtpl:34
 		qw422016.E().V(tp.Posts[0].Id)
-		//line template/thread.qtpl:33
+		//line template/thread.qtpl:34
 		qw422016.N().S(`#`)
-		//line template/thread.qtpl:33
+		//line template/thread.qtpl:34
 		qw422016.E().V(p.Id)
-		//line template/thread.qtpl:33
+		//line template/thread.qtpl:34
 		qw422016.N().S(`">`)
-		//line template/thread.qtpl:33
+		//line template/thread.qtpl:34
 		qw422016.E().V(p.Id)
-		//line template/thread.qtpl:33
+		//line template/thread.qtpl:34
 		qw422016.N().S(`</a></span>
                 <span>`)
-		//line template/thread.qtpl:34
+		//line template/thread.qtpl:35
 		qw422016.E().V(p.PostedAt)
-		//line template/thread.qtpl:34
+		//line template/thread.qtpl:35
 		qw422016.N().S(`</span>
             </div>
             <br>
             <div class="comment">
                 `)
-		//line template/thread.qtpl:38
-		qw422016.N().S(util.FormatPost(p.Content))
-		//line template/thread.qtpl:38
+		//line template/thread.qtpl:39
+		qw422016.N().S(p.Content)
+		//line template/thread.qtpl:39
 		qw422016.N().S(`
             </div>
         </td>
         </tr>
     `)
-		//line template/thread.qtpl:42
+		//line template/thread.qtpl:43
 	}
-	//line template/thread.qtpl:42
+	//line template/thread.qtpl:43
 	qw422016.N().S(`
 
 </tbody>
 </table>
 `)
-//line template/thread.qtpl:46
+//line template/thread.qtpl:47
 }
 
-//line template/thread.qtpl:46
+//line template/thread.qtpl:47
 func (tp *ThreadPage) WriteBody(qq422016 qtio422016.Writer) {
-	//line template/thread.qtpl:46
+	//line template/thread.qtpl:47
 	qw422016 := qt422016.AcquireWriter(qq422016)
-	//line template/thread.qtpl:46
+	//line template/thread.qtpl:47
 	tp.StreamBody(qw422016)
-	//line template/thread.qtpl:46
+	//line template/thread.qtpl:47
 	qt422016.ReleaseWriter(qw422016)
-//line template/thread.qtpl:46
+//line template/thread.qtpl:47
 }
 
-//line template/thread.qtpl:46
+//line template/thread.qtpl:47
 func (tp *ThreadPage) Body() string {
-	//line template/thread.qtpl:46
+	//line template/thread.qtpl:47
 	qb422016 := qt422016.AcquireByteBuffer()
-	//line template/thread.qtpl:46
+	//line template/thread.qtpl:47
 	tp.WriteBody(qb422016)
-	//line template/thread.qtpl:46
+	//line template/thread.qtpl:47
 	qs422016 := string(qb422016.B)
-	//line template/thread.qtpl:46
+	//line template/thread.qtpl:47
 	qt422016.ReleaseByteBuffer(qb422016)
-	//line template/thread.qtpl:46
+	//line template/thread.qtpl:47
 	return qs422016
-//line template/thread.qtpl:46
+//line template/thread.qtpl:47
 }

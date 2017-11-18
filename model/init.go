@@ -4,27 +4,31 @@ import (
 	"database/sql"
 	"os"
 	"strconv"
+	"sync"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/patrickmn/go-cache"
 	"github.com/romana/rlog"
+
+	"github.com/tiehuis/gorum/config"
 )
 
 const ModelVersion = 1
 
 var db *sql.DB
+var dbWMutex *sync.Mutex
 var memcache *cache.Cache
 
-func Init(source string) {
-	dbh, err := sql.Open("sqlite3", source)
+func Init() {
+	dbh, err := sql.Open("sqlite3", config.DatabaseAddress)
 	if err != nil {
 		rlog.Critical("Failed to open database:", err)
 		os.Exit(1)
 	}
 	db = dbh
 
-	rlog.Info("Opened database", source)
+	rlog.Info("Opened database", config.DatabaseAddress)
 
 	CheckExec("PRAGMA journal_mode = WAL;")
 	CheckExec("PRAGMA synchronous = FULL;")
@@ -53,11 +57,23 @@ func Migrate() {
 	case 0:
 		rlog.Info("Applying Migration0")
 		migration0()
-		testdata0()
 		WriteConfig(Version, "0")
 
 		fallthrough
 	case 1:
 		WriteConfig(Version, "1")
 	}
+
+	if config.UseTestData {
+		testdata()
+	}
+}
+
+func mustPrepare(query string) *sql.Stmt {
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		rlog.Critical("Could not perpare query:", query, err)
+		os.Exit(1)
+	}
+	return stmt
 }

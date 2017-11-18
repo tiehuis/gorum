@@ -2,6 +2,8 @@ package model
 
 import (
 	"time"
+
+	"github.com/tiehuis/gorum/config"
 )
 
 type Board struct {
@@ -83,7 +85,10 @@ func (b *Board) GetAllPosts() ([]Post, error) {
 		return cb.([]Post), nil
 	}
 
-	r, err := db.Query(`SELECT * FROM post WHERE board_parent_id = ? AND thread_parent_id IS NULL;`, b.Id)
+	r, err := db.Query(`SELECT * FROM post
+						WHERE board_parent_id = ? AND thread_parent_id IS NULL
+						ORDER BY updated_at DESC
+						LIMIT ?;`, b.Id, config.BoardThreadLimit)
 	if err != nil {
 		return []Post{}, err
 	}
@@ -91,19 +96,9 @@ func (b *Board) GetAllPosts() ([]Post, error) {
 
 	var ps []Post
 	for r.Next() {
-		var p Post
-		// Convert possible NULL thread_parent_id fields to 0, these are unused	by the database.
-		var tid interface{}
-
-		err := r.Scan(&p.Id, &p.Content, &tid, &p.BoardParentId, &p.PostedAt)
+		p, err := scanPost(r)
 		if err != nil {
-			return []Post{}, err
-		}
-
-		if tid == nil {
-			p.ThreadParentId = 0
-		} else {
-			p.ThreadParentId = tid.(int64)
+			return nil, err
 		}
 
 		ps = append(ps, p)

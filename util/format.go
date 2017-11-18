@@ -22,7 +22,8 @@ var digitLink = regexp.MustCompile(`&gt;&gt;([0-9]+)`)
 //
 // - Post id's prefixed with `>>` become thread local links
 //
-// TODO: This is slow and could be done in a single pass.
+// TODO: This is slow (puts rendering from 2ms to 500ms for a long thread)
+// and should be optimized.
 func FormatPost(msg string) string {
 	split := strings.Split(msg, "\n")
 

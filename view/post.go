@@ -34,10 +34,10 @@ func Post(ctx *fasthttp.RequestCtx) {
 	}
 
 	var rp string
-	if p.ThreadParentId == 0 {
-		rp = fmt.Sprintf("/board/%s/%v", b.Code, p.Id)
+	if p.ThreadParentId.Valid {
+		rp = fmt.Sprintf("/board/%s/%v#%v", b.Code, p.ThreadParentId.Int64, p.Id)
 	} else {
-		rp = fmt.Sprintf("/board/%s/%v#%v", b.Code, p.ThreadParentId, p.Id)
+		rp = fmt.Sprintf("/board/%s/%v", b.Code, p.Id)
 	}
 
 	rlog.Debug("Performing Post redirect to", rp)

@@ -2,7 +2,6 @@
     "fmt"
 
     "github.com/tiehuis/gorum/model"
-    "github.com/tiehuis/gorum/util"
 ) %}
 
 {% code
@@ -31,7 +30,15 @@ type BoardPage struct {
             </div>
             <br>
             <div class="comment">
-                {%s= util.FormatPost(p.Content) %}
+                {%s= p.Content %}
+            </div>
+        </td>
+        </tr>
+        <tr>
+        <td id="reply-count">
+            <div>
+                {% code count, _ := p.GetParentThreadCount() %}
+                {%v count - 1 %} replies
             </div>
         </td>
         </tr>

@@ -18,7 +18,7 @@ func InternalError(ctx *fasthttp.RequestCtx, state interface{}) {
 	ctx.SetContentType("text/html; charset=utf-8")
 	ctx.SetStatusCode(fasthttp.StatusInternalServerError)
 
-	rlog.Errorf("error handler:", state)
+	rlog.Error("error handler:", state)
 
 	page := &template.InternalErrorPage{state}
 	template.WritePageTemplate(ctx, page)

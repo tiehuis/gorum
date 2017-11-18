@@ -5,4 +5,4 @@ build:
 	go build
 
 run: build
-	./gorum
+	./gorum -testdata

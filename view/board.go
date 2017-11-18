@@ -61,7 +61,8 @@ func BoardPost(ctx *fasthttp.RequestCtx) {
 	nid, err := model.CreateThread(model.ThreadW{b.Id, content})
 	if err != nil {
 		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-		GeneralError(ctx, "failed to create post right now")
+		GeneralError(ctx, "failed to create thread right now")
+		rlog.Debug("Failed to create thread:", err)
 		return
 	}
 

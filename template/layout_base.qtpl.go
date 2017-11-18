@@ -149,7 +149,7 @@ func StreamPostBoxRow(qw422016 *qt422016.Writer, action string) {
 	qw422016.N().S(`
     <tr id="postbox">
         <td>
-            <div><label for="show-new-post">+[New]</label></div>
+            <div><label class="new-post-toggle" for="show-new-post">+[New]</label></div>
             <input id="show-new-post" type=checkbox>
             <div id="new-post" class="hidden">
                 <form action="`)

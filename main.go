@@ -4,12 +4,11 @@
 package main
 
 import (
-	"flag"
-
 	"github.com/buaazp/fasthttprouter"
 	"github.com/romana/rlog"
 	"github.com/valyala/fasthttp"
 
+	"github.com/tiehuis/gorum/config"
 	"github.com/tiehuis/gorum/model"
 	"github.com/tiehuis/gorum/view"
 )
@@ -32,18 +31,17 @@ func routes() *fasthttprouter.Router {
 }
 
 func main() {
-	dbName := flag.String("sqlite-db", "file::memory:?mode=memory&cache=shared", "Database name")
-	listenAddr := flag.String("listen-address", ":8080", "Server address")
-	flag.Parse()
+	config.Init()
 
-	model.Init(*dbName)
+	model.Init()
 	model.Migrate()
+	model.PrepareQueries()
 
-	rlog.Info("Started server on", *listenAddr)
+	rlog.Info("Started server on", config.HttpAddress)
 
 	view.InitMemCache()
 	routes := routes().Handler
 	routes = view.TimerHandler(routes)
 
-	rlog.Critical(fasthttp.ListenAndServe(*listenAddr, routes))
+	rlog.Critical(fasthttp.ListenAndServe(config.HttpAddress, routes))
 }
